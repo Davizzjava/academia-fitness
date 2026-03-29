@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>NovaEra Fitness — Molde seu corpo, eleve sua mente.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================
+     RESET & CSS VARIABLES
+  ============================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080A0C;
+    --bg2:       #0F1214;
+    --bg3:       #161A1D;
+    --card:      #1A1E22;
+    --border:    #2A2E34;
+    --green:     #39FF7A;
+    --green-dim: #1a7a3a;
+    --orange:    #FF6B2B;
+    --text:      #E8ECF0;
+    --muted:     #7A8491;
+    --radius:    12px;
+    --header-h:  64px;
+    --transition: 0.28s cubic-bezier(.4,0,.2,1);
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { max-width: 100%; display: block; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; border: none; outline: none; }
+  input, textarea { font-family: inherit; }
+  ul { list-style: none; }
+
+  /* ============================
+     SCROLLBAR
+  ============================ */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+
+  /* ============================
+     NOISE OVERLAY
+  ============================ */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: .5;
+  }
+
+  /* ============================
+     TYPOGRAPHY
+  ============================ */
+  .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: .04em; }
+
+  h1, h2, h3 { line-height: 1.1; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--green);
+    margin-bottom: 12px;
+  }
+  .section-label::before {
+    content: ''; width: 20px; height: 2px;
+    background: var(--green); border-radius: 2px;
+  }
+
+  /* ============================
+     UTILITIES
+  ============================ */
+  .container {
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-pad { padding: 72px 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 14px 28px;
+    font-size: 14px; font-weight: 700; letter-spacing: .06em;
+    border-radius: var(--radius); transition: var(--transition);
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-green {
+    background: var(--green); color: #080A0C;
+    box-shadow: 0 0 24px rgba(57,255,122,.25);
+  }
+  .btn-green:hover, .btn-green:focus-visible {
+    background: #52ffaa;
+    box-shadow: 0 0 36px rgba(57,255,122,.45);
+    transform: translateY(-2px);
+  }
+  .btn-green:active { transform: translateY(0); }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--green);
+    color: var(--green);
+  }
+  .btn-outline:hover, .btn-outline:focus-visible {
+    background: var(--green); color: #080A0C;
+  }
+  .btn-orange {
+    background: var(--orange); color: #fff;
+    box-shadow: 0 0 24px rgba(255,107,43,.25);
+  }
+  .btn-orange:hover, .btn-orange:focus-visible {
+    background: #ff8652;
+    box-shadow: 0 0 36px rgba(255,107,43,.45);
+    transform: translateY(-2px);
+  }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============================
+     HEADER
+  ============================ */
+  #header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    z-index: 1000;
+    transition: background var(--transition), box-shadow var(--transition);
+  }
+  #header.scrolled {
+    background: rgba(8,10,12,.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 1px 0 var(--border);
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 100%;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: .06em;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--green); }
+
+  /* Desktop nav */
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-links a {
+    font-size: 13px; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); transition: color var(--transition);
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 2px;
+    background: var(--green); border-radius: 2px;
+    transition: width var(--transition);
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--text); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+  .header-cta { display: none; }
+
+  /* Hamburger */
+  .hamburger {
+    display: flex; flex-direction: column;
+    gap: 5px; padding: 8px; cursor: pointer;
+    background: transparent; border: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--text); border-radius: 2px;
+    transition: var(--transition);
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    top: var(--header-h); left: 0; right: 0;
+    background: rgba(8,10,12,.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 20px 32px;
+    display: flex; flex-direction: column; gap: 6px;
+    transform: translateY(-110%);
+    opacity: 0;
+    transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .mobile-menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .mobile-menu a {
+    padding: 14px 16px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: .1em;
+    color: var(--muted);
+    border-radius: var(--radius);
+    transition: var(--transition);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu a:last-of-type { border-bottom: none; }
+  .mobile-menu a:hover, .mobile-menu a:active { color: var(--green); background: rgba(57,255,122,.06); }
+  .mobile-menu .btn { margin-top: 16px; width: 100%; font-size: 15px; padding: 16px; }
+
+  /* ============================
+     HERO
+  ============================ */
+  #hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex; align-items: flex-end;
+    padding-top: var(--header-h);
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80') center/cover no-repeat;
+    will-change: transform;
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(8,10,12,.55) 0%,
+      rgba(8,10,12,.7) 40%,
+      rgba(8,10,12,.92) 75%,
+      var(--bg) 100%
+    );
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 60px 0 72px;
+    max-width: 720px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(57,255,122,.12);
+    border: 1px solid rgba(57,255,122,.3);
+    padding: 6px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 24px;
+  }
+  .hero-badge span {
+    width: 7px; height: 7px;
+    background: var(--green); border-radius: 50%;
+    animation: pulse-dot 1.8s ease infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow: 0 0 0 0 rgba(57,255,122,.5); }
+    50% { box-shadow: 0 0 0 6px rgba(57,255,122,0); }
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 14vw, 100px);
+    line-height: .95;
+    letter-spacing: .02em;
+    margin-bottom: 20px;
+  }
+  .hero-title .accent { color: var(--green); }
+  .hero-title .line2 { color: var(--orange); }
+  .hero-sub {
+    font-size: clamp(15px, 3.5vw, 18px);
+    color: var(--muted); max-width: 480px;
+    margin-bottom: 36px; line-height: 1.65;
+  }
+  .hero-buttons {
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 32px;
+    margin-top: 52px; padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 2px; }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; line-height: 1;
+    color: var(--green);
+  }
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+
+  /* ============================
+     SOBRE
+  ============================ */
+  #sobre { background: var(--bg2); }
+  .sobre-grid {
+    display: grid;
+    gap: 40px;
+  }
+  .sobre-image-wrap {
+    position: relative; border-radius: var(--radius); overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .sobre-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .sobre-image-wrap::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(57,255,122,.15), transparent);
+    pointer-events: none;
+  }
+  .sobre-tag {
+    position: absolute; bottom: 16px; left: 16px;
+    background: rgba(8,10,12,.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    padding: 10px 16px; border-radius: var(--radius);
+  }
+  .sobre-tag strong {
+    display: block; font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; color: var(--green); line-height: 1;
+  }
+  .sobre-tag span { font-size: 11px; color: var(--muted); }
+
+  .sobre-text h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 8vw, 52px);
+    margin-bottom: 16px;
+  }
+  .sobre-text p {
+    color: var(--muted); margin-bottom: 28px;
+    font-size: 15px; line-height: 1.75;
+  }
+  .pilares { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+  .pilar {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 16px; border-radius: var(--radius);
+  }
+  .pilar-icon {
+    font-size: 24px; flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: rgba(57,255,122,.1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pilar h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .pilar p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ============================
+     MODALIDADES
+  ============================ */
+  #modalidades { background: var(--bg); }
+  .modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 16px;
+  }
+  .modal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    transition: var(--transition);
+    cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .modal-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--green);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--transition);
+  }
+  .modal-card:hover { border-color: rgba(57,255,122,.3); transform: translateY(-4px); }
+  .modal-card:hover::before { transform: scaleX(1); }
+  .modal-emoji {
+    font-size: 36px; margin-bottom: 16px;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(57,255,122,.3));
+  }
+  .modal-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; margin-bottom: 8px; }
+  .modal-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .modal-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--green);
+  }
+  .modal-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--green); border-radius: 50%;
+  }
+
+  /* ============================
+     HORÁRIOS TABS
+  ============================ */
+  #horarios { background: var(--bg2); }
+  .tabs-wrapper { overflow: hidden; }
+  .tabs-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 2px;
+    -ms-overflow-style: none; scrollbar-width: none;
+    margin-bottom: 24px;
+  }
+  .tabs-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--muted);
+    transition: var(--transition);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-btn.active, .tab-btn:hover {
+    background: var(--green);
+    border-color: var(--green);
+    color: #080A0C;
+  }
+  .tab-panel { display: none; animation: fadeSlide .3s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .schedule-table { width: 100%; border-collapse: collapse; }
+  .schedule-table th {
+    text-align: left; font-size: 11px;
+    font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 10px 16px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+  .schedule-table td {
+    padding: 14px 16px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .schedule-table tr:last-child td { border-bottom: none; }
+  .schedule-table tr:hover td { background: rgba(255,255,255,.02); }
+  .sched-time { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--green); white-space: nowrap; }
+  .sched-class { font-weight: 600; }
+  .sched-teacher { font-size: 12px; color: var(--muted); }
+  .badge-status {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 999px; font-size: 11px; font-weight: 700;
+    white-space: nowrap;
+  }
+  .badge-livre { background: rgba(57,255,122,.15); color: var(--green); }
+  .badge-vagas { background: rgba(255,107,43,.15); color: var(--orange); }
+  .badge-lotado { background: rgba(255,50,50,.15); color: #ff5050; }
+
+  /* Overflow X scroll for table on mobile */
+  .table-scroll { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+
+  /* ============================
+     IMC
+  ============================ */
+  #imc { background: var(--bg); }
+  .imc-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .imc-form-area {
+    padding: 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .imc-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-group label {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .field-group input {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 16px; /* prevents zoom on iOS */
+    color: var(--text);
+    transition: border-color var(--transition);
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .field-group input:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(57,255,122,.1);
+  }
+  .field-group input.error { border-color: #ff5050; }
+  .field-error { font-size: 12px; color: #ff5050; }
+
+  .imc-result {
+    padding: 32px 24px;
+    text-align: center;
+    display: none;
+  }
+  .imc-result.show { display: block; animation: fadeSlide .4s ease; }
+  .imc-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px; line-height: 1;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .imc-category {
+    font-size: 20px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .imc-msg { color: var(--muted); font-size: 15px; line-height: 1.65; margin-bottom: 24px; }
+  .imc-scale {
+    display: flex; border-radius: 999px; overflow: hidden;
+    height: 10px; margin-bottom: 10px;
+  }
+  .imc-scale span { flex: 1; }
+  .imc-scale .s1 { background: #4fc3f7; }
+  .imc-scale .s2 { background: #81c784; }
+  .imc-scale .s3 { background: #ffb74d; }
+  .imc-scale .s4 { background: #ff8a65; }
+  .imc-scale .s5 { background: #ef5350; }
+  .imc-scale-labels {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--muted);
+    letter-spacing: .04em;
+  }
+  .imc-indicator {
+    width: 4px; height: 16px;
+    background: var(--text); border-radius: 2px;
+    position: absolute; top: -3px;
+    transform: translateX(-50%);
+    transition: left .6s cubic-bezier(.4,0,.2,1);
+  }
+  .imc-scale-wrap { position: relative; margin-bottom: 6px; }
+
+  /* ============================
+     PLANOS
+  ============================ */
+  #planos { background: var(--bg2); }
+  .planos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+  .plan-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 24px;
+    transition: var(--transition);
+    position: relative; overflow: hidden;
+  }
+  .plan-card:hover { transform: translateY(-6px); }
+  .plan-card.featured {
+    border-color: var(--green);
+    box-shadow: 0 0 40px rgba(57,255,122,.12);
+  }
+  .featured-label {
+    position: absolute; top: 20px; right: -28px;
+    background: var(--green); color: #080A0C;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: .14em; text-transform: uppercase;
+    padding: 5px 36px;
+    transform: rotate(45deg);
+  }
+  .plan-name {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px;
+  }
+  .plan-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px; line-height: 1;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .plan-price sup { font-size: 24px; vertical-align: super; }
+  .plan-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+  .plan-features { margin-bottom: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .plan-feature {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--muted);
+  }
+  .plan-feature span:first-child {
+    width: 20px; height: 20px; flex-shrink: 0;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .check { background: rgba(57,255,122,.15); color: var(--green); }
+  .cross { background: rgba(255,255,255,.06); color: var(--muted); opacity: .4; }
+  .plan-feature.active { color: var(--text); }
+
+  /* ============================
+     CONTATO
+  ============================ */
+  #contato { background: var(--bg); }
+  .contato-grid { display: grid; gap: 40px; }
+  .contato-info h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 8vw, 52px);
+    margin-bottom: 16px;
+  }
+  .contato-info p { color: var(--muted); font-size: 15px; line-height: 1.75; margin-bottom: 28px; }
+  .contact-items { display: flex; flex-direction: column; gap: 16px; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .contact-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: rgba(57,255,122,.1); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .contact-item h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .contact-item p { font-size: 13px; color: var(--muted); }
+
+  /* Form */
+  .form-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 32px 24px;
+  }
+  .form-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; margin-bottom: 6px;
+  }
+  .form-card p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .form-fields { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+  .form-input-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .form-input-wrap label {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .form-input-wrap input {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px;
+    font-size: 16px; /* prevents zoom on iOS */
+    color: var(--text);
+    transition: border-color var(--transition);
+    width: 100%; -webkit-appearance: none;
+  }
+  .form-input-wrap input:focus {
+    outline: none; border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(57,255,122,.1);
+  }
+  .form-input-wrap input.error { border-color: #ff5050; }
+  .form-error { font-size: 12px; color: #ff5050; }
+
+  /* ============================
+     FOOTER
+  ============================ */
+  footer {
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    padding: 40px 0 28px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .footer-brand .logo { font-size: 24px; margin-bottom: 12px; display: block; }
+  .footer-brand p { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; }
+  .footer-col h4 {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: var(--text); margin-bottom: 14px;
+  }
+  .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul li a {
+    font-size: 13px; color: var(--muted);
+    transition: color var(--transition);
+  }
+  .footer-col ul li a:hover { color: var(--green); }
+  .social-links { display: flex; gap: 10px; margin-top: 16px; }
+  .social-link {
+    width: 40px; height: 40px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; transition: var(--transition);
+  }
+  .social-link:hover {
+    background: var(--green); border-color: var(--green);
+    transform: translateY(-3px);
+  }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex; flex-wrap: wrap;
+    justify-content: space-between; align-items: center;
+    gap: 12px;
+    font-size: 12px; color: var(--muted);
+  }
+  .footer-bottom a { color: var(--green); }
+
+  /* ============================
+     WHATSAPP BUTTON
+  ============================ */
+  .whatsapp-btn {
+    position: fixed;
+    bottom: 24px; right: 20px;
+    width: 56px; height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 990; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(37,211,102,.45);
+    transition: var(--transition);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .whatsapp-btn:hover, .whatsapp-btn:active {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(37,211,102,.6);
+  }
+  .whatsapp-btn svg { width: 30px; height: 30px; fill: #fff; }
+  .whatsapp-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: rgba(37,211,102,.4);
+    animation: wa-pulse 2s ease infinite;
+  }
+  @keyframes wa-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.65); opacity: 0; }
+  }
+  .wa-tooltip {
+    position: absolute;
+    right: calc(100% + 12px); top: 50%;
+    transform: translateY(-50%);
+    background: #1a1e22;
+    border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    color: var(--text); white-space: nowrap;
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--transition);
+  }
+  .whatsapp-btn:hover .wa-tooltip { opacity: 1; }
+
+  /* ============================
+     SCROLL TO TOP
+  ============================ */
+  .scroll-top {
+    position: fixed; bottom: 88px; right: 20px;
+    width: 44px; height: 44px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; z-index: 990; cursor: pointer;
+    opacity: 0; pointer-events: none;
+    transition: var(--transition);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .scroll-top.show { opacity: 1; pointer-events: all; }
+  .scroll-top:hover { background: var(--green); color: #080A0C; border-color: var(--green); }
+
+  /* ============================
+     TOAST
+  ============================ */
+  .toast {
+    position: fixed; bottom: 96px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--card); border: 1px solid var(--green);
+    padding: 14px 24px; border-radius: var(--radius);
+    font-size: 14px; font-weight: 600; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+    z-index: 9998; opacity: 0; pointer-events: none;
+    transition: opacity .3s ease, transform .3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    max-width: calc(100vw - 40px);
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ============================
+     DESKTOP BREAKPOINT (768+)
+  ============================ */
+  @media (min-width: 768px) {
+    :root { --header-h: 72px; }
+    .container { padding: 0 32px; }
+    .section-pad { padding: 96px 0; }
+
+    /* Header */
+    .hamburger { display: none; }
+    .nav-links { display: flex; }
+    .header-cta { display: flex; }
+
+    /* Sobre */
+    .sobre-grid { grid-template-columns: 1fr 1fr; align-items: center; }
+
+    /* Contato */
+    .contato-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+
+    /* Footer */
+    .footer-grid { grid-template-columns: 1.5fr 1fr 1fr; }
+
+    /* IMC fields */
+    .imc-form-area { padding: 40px; }
+    .imc-result { padding: 40px; }
+    .form-card { padding: 40px; }
+
+    /* Scroll top positioning */
+    .scroll-top { bottom: 96px; right: 28px; }
+    .whatsapp-btn { bottom: 32px; right: 28px; }
+  }
+
+  @media (min-width: 1024px) {
+    .sobre-grid { gap: 64px; }
+    .contato-grid { gap: 64px; }
+  }
+
+  /* ============================
+     SECTION HEADER (reuse)
+  ============================ */
+  .section-header { margin-bottom: 48px; }
+  .section-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 9vw, 60px);
+    margin-bottom: 12px;
+  }
+  .section-header p { color: var(--muted); font-size: 15px; max-width: 540px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- ================================================
+     HEADER
+================================================ -->
+<header id="header">
+  <div class="container header-inner">
+    <a href="#hero" class="logo">Nova<span>Era</span> Fitness</a>
+
+    <nav class="nav-links" role="navigation" aria-label="Menu principal">
+      <a href="#sobre">Sobre</a>
+      <a href="#modalidades">Modalidades</a>
+      <a href="#horarios">Horários</a>
+      <a href="#planos">Planos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <a href="#planos" class="btn btn-green header-cta" style="padding:10px 22px;font-size:13px;">Matricule-se</a>
+
+    <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu mobile">
+  <a href="#sobre">Sobre</a>
+  <a href="#modalidades">Modalidades</a>
+  <a href="#horarios">Horários</a>
+  <a href="#planos">Planos</a>
+  <a href="#imc">Calcular IMC</a>
+  <a href="#contato">Contato</a>
+  <a href="#planos" class="btn btn-green">Matricule-se Agora</a>
+</nav>
+
+
+<!-- ================================================
+     HERO
+================================================ -->
+<section id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge" role="status">
+        <span></span> Matriculas Abertas — 2025
+      </div>
+      <h1 class="hero-title bebas">
+        Molde<br>
+        <span class="accent">seu Corpo,</span><br>
+        <span class="line2">Eleve<br>sua Mente.</span>
+      </h1>
+      <p class="hero-sub">
+        A academia que transforma vidas com equipamentos de ponta, professores qualificados e um ambiente que te motiva todos os dias.
+      </p>
+      <div class="hero-buttons">
+        <a href="#planos" class="btn btn-green" style="font-size:15px;padding:16px 32px;">
+          🚀 Comece Grátis por 7 Dias
+        </a>
+        <a href="#modalidades" class="btn btn-outline">
+          Ver Modalidades
+        </a>
+      </div>
+      <div class="hero-stats" aria-label="Estatísticas">
+        <div class="stat-item">
+          <span class="stat-number" aria-label="Mais de 1200 alunos">1.2K+</span>
+          <span class="stat-label">Alunos Ativos</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">8+</span>
+          <span class="stat-label">Anos de Mercado</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">98%</span>
+          <span class="stat-label">Satisfação</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">12</span>
+          <span class="stat-label">Modalidades</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     SOBRE
+================================================ -->
+<section id="sobre" class="section-pad">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-image-wrap reveal">
+        <img
+          src="https://images.unsplash.com/photo-1571019613914-85f342c6a11e?w=800&q=80"
+          alt="Academia NovaEra — equipamentos modernos"
+          loading="lazy"
+        >
+        <div class="sobre-tag">
+          <strong>+8 Anos</strong>
+          <span>Transformando vidas</span>
+        </div>
+      </div>
+      <div class="sobre-text reveal">
+        <span class="section-label">Nossa História</span>
+        <h2>Mais que uma academia. Uma <span style="color:var(--green)">comunidade.</span></h2>
+        <p>
+          Fundada com o propósito de democratizar o acesso ao fitness de qualidade, a NovaEra Fitness nasceu da paixão por transformar vidas. Acreditamos que saúde é investimento — não despesa.
+        </p>
+        <div class="pilares">
+          <div class="pilar">
+            <div class="pilar-icon" aria-hidden="true">🏋️</div>
+            <div>
+              <h4>Equipamentos de Última Geração</h4>
+              <p>Renovados anualmente com as melhores marcas do mercado para maximizar seus resultados.</p>
+            </div>
+          </div>
+          <div class="pilar">
+            <div class="pilar-icon" aria-hidden="true">❄️</div>
+            <div>
+              <h4>Ambiente Climatizado 24h</h4>
+              <p>Temperatura ideal para seu treino, sem desconforto térmico em nenhuma época do ano.</p>
+            </div>
+          </div>
+          <div class="pilar">
+            <div class="pilar-icon" aria-hidden="true">🎓</div>
+            <div>
+              <h4>Professores CREF Certificados</h4>
+              <p>Equipe altamente qualificada que acompanha sua evolução com treinos personalizados.</p>
+            </div>
+          </div>
+        </div>
+        <a href="#planos" class="btn btn-green">Conheça os planos</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     MODALIDADES
+================================================ -->
+<section id="modalidades" class="section-pad">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">O que oferecemos</span>
+      <h2>Escolha sua <span style="color:var(--orange)">Modalidade</span></h2>
+      <p>Do iniciante ao atleta avançado, temos a modalidade certa para cada objetivo e nível de condicionamento.</p>
+    </div>
+    <div class="modal-grid">
+      <div class="modal-card reveal">
+        <span class="modal-emoji" aria-hidden="true">🏋️‍♂️</span>
+        <h3>Musculação</h3>
+        <p>Treino com pesos para hipertrofia, força e definição muscular. Acompanhamento personalizado.</p>
+        <span class="modal-badge">Disponível todos os dias</span>
+      </div>
+      <div class="modal-card reveal">
+        <span class="modal-emoji" aria-hidden="true">⚡</span>
+        <h3>Cross Training</h3>
+        <p>Alta intensidade funcional. Queima calórica máxima com movimentos variados e desafiadores.</p>
+        <span class="modal-badge">Seg, Qua, Sex</span>
+      </div>
+      <div class="modal-card reveal">
+        <span class="modal-emoji" aria-hidden="true">🧘</span>
+        <h3>Pilates</h3>
+        <p>Equilíbrio entre força e flexibilidade. Ideal para postura, reabilitação e qualidade de vida.</p>
+        <span class="modal-badge">Ter, Qui, Sáb</span>
+      </div>
+      <div class="modal-card reveal">
+        <span class="modal-emoji" aria-hidden="true">🥊</span>
+        <h3>Lutas & MMA</h3>
+        <p>Muay Thai, Jiu-Jitsu e Boxe. Condicionamento físico e autodefesa com mestres credenciados.</p>
+        <span class="modal-badge">Seg a Sáb</span>
+      </div>
+      <div class="modal-card reveal">
+        <span class="modal-emoji" aria-hidden="true">🚴</span>
+        <h3>Spinning</h3>
+        <p>Aulas de ciclismo indoor com música, energia e monitores certificados Spinning® oficial.</p>
+        <span class="modal-badge">Ter, Qui, Sáb</span>
+      </div>
+      <div class="modal-card reveal">
+        <span class="modal-emoji" aria-hidden="true">💃</span>
+        <h3>Zumba</h3>
+        <p>Fitness dançante que mistura ritmos latinos. Ótimo para quem quer se exercitar com alegria.</p>
+        <span class="modal-badge">Qua, Sex</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     HORÁRIOS
+================================================ -->
+<section id="horarios" class="section-pad">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Grade Semanal</span>
+      <h2>Horários das <span style="color:var(--green)">Aulas</span></h2>
+      <p>Selecione o dia da semana para ver a grade completa. Vagas limitadas — reservas pelo WhatsApp.</p>
+    </div>
+    <div class="tabs-wrapper reveal">
+      <div class="tabs-nav" role="tablist" aria-label="Dias da semana">
+        <button class="tab-btn active" data-tab="seg" role="tab" aria-selected="true">Segunda</button>
+        <button class="tab-btn" data-tab="ter" role="tab" aria-selected="false">Terça</button>
+        <button class="tab-btn" data-tab="qua" role="tab" aria-selected="false">Quarta</button>
+        <button class="tab-btn" data-tab="qui" role="tab" aria-selected="false">Quinta</button>
+        <button class="tab-btn" data-tab="sex" role="tab" aria-selected="false">Sexta</button>
+        <button class="tab-btn" data-tab="sab" role="tab" aria-selected="false">Sábado</button>
+      </div>
+
+      <!-- Segunda -->
+      <div class="tab-panel active" id="tab-seg" role="tabpanel">
+        <div class="table-scroll">
+          <table class="schedule-table">
+            <thead><tr><th>Horário</th><th>Aula</th><th>Professor</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sched-time">06:00</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. André</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">07:30</span></td><td><span class="sched-class">Cross Training</span></td><td><span class="sched-teacher">Prof. Carla</span></td><td><span class="badge-status badge-vagas">3 vagas</span></td></tr>
+              <tr><td><span class="sched-time">09:00</span></td><td><span class="sched-class">Pilates</span></td><td><span class="sched-teacher">Prof.ª Renata</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">11:00</span></td><td><span class="sched-class">Spinning</span></td><td><span class="sched-teacher">Prof. Lucas</span></td><td><span class="badge-status badge-vagas">5 vagas</span></td></tr>
+              <tr><td><span class="sched-time">18:00</span></td><td><span class="sched-class">Muay Thai</span></td><td><span class="sched-teacher">Mestre João</span></td><td><span class="badge-status badge-vagas">2 vagas</span></td></tr>
+              <tr><td><span class="sched-time">19:30</span></td><td><span class="sched-class">Cross Training</span></td><td><span class="sched-teacher">Prof. Carla</span></td><td><span class="badge-status badge-lotado">Lotado</span></td></tr>
+              <tr><td><span class="sched-time">21:00</span></td><td><span class="sched-class">Jiu-Jitsu</span></td><td><span class="sched-teacher">Prof. Bruno</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Terça -->
+      <div class="tab-panel" id="tab-ter" role="tabpanel">
+        <div class="table-scroll">
+          <table class="schedule-table">
+            <thead><tr><th>Horário</th><th>Aula</th><th>Professor</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sched-time">06:00</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. André</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">08:00</span></td><td><span class="sched-class">Pilates</span></td><td><span class="sched-teacher">Prof.ª Renata</span></td><td><span class="badge-status badge-vagas">4 vagas</span></td></tr>
+              <tr><td><span class="sched-time">10:00</span></td><td><span class="sched-class">Zumba</span></td><td><span class="sched-teacher">Prof.ª Bianca</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">17:30</span></td><td><span class="sched-class">Spinning</span></td><td><span class="sched-teacher">Prof. Lucas</span></td><td><span class="badge-status badge-vagas">6 vagas</span></td></tr>
+              <tr><td><span class="sched-time">19:00</span></td><td><span class="sched-class">Boxe</span></td><td><span class="sched-teacher">Mestre João</span></td><td><span class="badge-status badge-vagas">3 vagas</span></td></tr>
+              <tr><td><span class="sched-time">20:30</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. Fábio</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quarta -->
+      <div class="tab-panel" id="tab-qua" role="tabpanel">
+        <div class="table-scroll">
+          <table class="schedule-table">
+            <thead><tr><th>Horário</th><th>Aula</th><th>Professor</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sched-time">06:00</span></td><td><span class="sched-class">Cross Training</span></td><td><span class="sched-teacher">Prof. Carla</span></td><td><span class="badge-status badge-vagas">1 vaga</span></td></tr>
+              <tr><td><span class="sched-time">07:30</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. André</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">09:30</span></td><td><span class="sched-class">Pilates</span></td><td><span class="sched-teacher">Prof.ª Renata</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">18:00</span></td><td><span class="sched-class">Jiu-Jitsu</span></td><td><span class="sched-teacher">Prof. Bruno</span></td><td><span class="badge-status badge-vagas">4 vagas</span></td></tr>
+              <tr><td><span class="sched-time">19:30</span></td><td><span class="sched-class">Zumba</span></td><td><span class="sched-teacher">Prof.ª Bianca</span></td><td><span class="badge-status badge-lotado">Lotado</span></td></tr>
+              <tr><td><span class="sched-time">21:00</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. Fábio</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quinta -->
+      <div class="tab-panel" id="tab-qui" role="tabpanel">
+        <div class="table-scroll">
+          <table class="schedule-table">
+            <thead><tr><th>Horário</th><th>Aula</th><th>Professor</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sched-time">06:30</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. André</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">08:00</span></td><td><span class="sched-class">Spinning</span></td><td><span class="sched-teacher">Prof. Lucas</span></td><td><span class="badge-status badge-vagas">5 vagas</span></td></tr>
+              <tr><td><span class="sched-time">10:00</span></td><td><span class="sched-class">Pilates</span></td><td><span class="sched-teacher">Prof.ª Renata</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">17:00</span></td><td><span class="sched-class">Muay Thai</span></td><td><span class="sched-teacher">Mestre João</span></td><td><span class="badge-status badge-vagas">2 vagas</span></td></tr>
+              <tr><td><span class="sched-time">19:00</span></td><td><span class="sched-class">Cross Training</span></td><td><span class="sched-teacher">Prof. Carla</span></td><td><span class="badge-status badge-lotado">Lotado</span></td></tr>
+              <tr><td><span class="sched-time">20:30</span></td><td><span class="sched-class">Boxe</span></td><td><span class="sched-teacher">Mestre João</span></td><td><span class="badge-status badge-vagas">3 vagas</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sexta -->
+      <div class="tab-panel" id="tab-sex" role="tabpanel">
+        <div class="table-scroll">
+          <table class="schedule-table">
+            <thead><tr><th>Horário</th><th>Aula</th><th>Professor</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sched-time">06:00</span></td><td><span class="sched-class">Cross Training</span></td><td><span class="sched-teacher">Prof. Carla</span></td><td><span class="badge-status badge-vagas">3 vagas</span></td></tr>
+              <tr><td><span class="sched-time">08:00</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. André</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">10:00</span></td><td><span class="sched-class">Zumba</span></td><td><span class="sched-teacher">Prof.ª Bianca</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">17:30</span></td><td><span class="sched-class">Jiu-Jitsu</span></td><td><span class="sched-teacher">Prof. Bruno</span></td><td><span class="badge-status badge-vagas">4 vagas</span></td></tr>
+              <tr><td><span class="sched-time">19:00</span></td><td><span class="sched-class">Spinning</span></td><td><span class="sched-teacher">Prof. Lucas</span></td><td><span class="badge-status badge-lotado">Lotado</span></td></tr>
+              <tr><td><span class="sched-time">20:30</span></td><td><span class="sched-class">Musculação</span></td><td><span class="sched-teacher">Prof. Fábio</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sábado -->
+      <div class="tab-panel" id="tab-sab" role="tabpanel">
+        <div class="table-scroll">
+          <table class="schedule-table">
+            <thead><tr><th>Horário</th><th>Aula</th><th>Professor</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="sched-time">07:00</span></td><td><span class="sched-class">Spinning</span></td><td><span class="sched-teacher">Prof. Lucas</span></td><td><span class="badge-status badge-vagas">5 vagas</span></td></tr>
+              <tr><td><span class="sched-time">08:30</span></td><td><span class="sched-class">Cross Training</span></td><td><span class="sched-teacher">Prof. Carla</span></td><td><span class="badge-status badge-vagas">2 vagas</span></td></tr>
+              <tr><td><span class="sched-time">10:00</span></td><td><span class="sched-class">Pilates</span></td><td><span class="sched-teacher">Prof.ª Renata</span></td><td><span class="badge-status badge-livre">Livre</span></td></tr>
+              <tr><td><span class="sched-time">11:30</span></td><td><span class="sched-class">Muay Thai</span></td><td><span class="sched-teacher">Mestre João</span></td><td><span class="badge-status badge-vagas">4 vagas</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tabs-wrapper -->
+  </div>
+</section>
+
+
+<!-- ================================================
+     IMC
+================================================ -->
+<section id="imc" class="section-pad">
+  <div class="container">
+    <div class="section-header reveal" style="text-align:center;">
+      <span class="section-label" style="justify-content:center;">Ferramenta Gratuita</span>
+      <h2>Descubra seu <span style="color:var(--green)">IMC</span></h2>
+      <p style="max-width:460px;margin:0 auto;">Calcule agora seu Índice de Massa Corporal e receba uma recomendação personalizada para alcançar seus objetivos.</p>
+    </div>
+    <div class="imc-wrap reveal">
+      <div class="imc-form-area">
+        <div class="imc-fields">
+          <div class="field-group">
+            <label for="imcPeso">Peso (kg)</label>
+            <input type="number" id="imcPeso" placeholder="Ex: 75" min="30" max="250" inputmode="decimal" aria-label="Peso em quilogramas">
+            <span class="field-error" id="pesoError" aria-live="polite"></span>
+          </div>
+          <div class="field-group">
+            <label for="imcAltura">Altura (cm)</label>
+            <input type="number" id="imcAltura" placeholder="Ex: 175" min="100" max="250" inputmode="decimal" aria-label="Altura em centímetros">
+            <span class="field-error" id="alturaError" aria-live="polite"></span>
+          </div>
+        </div>
+        <button class="btn btn-green" style="width:100%;font-size:15px;padding:16px;" onclick="calcularIMC()">
+          ⚡ Calcular meu IMC
+        </button>
+      </div>
+      <div class="imc-result" id="imcResult" aria-live="polite">
+        <div class="imc-score" id="imcScoreDisplay">0.0</div>
+        <div class="imc-category" id="imcCategory">—</div>
+        <p class="imc-msg" id="imcMsg"></p>
+        <div class="imc-scale-wrap">
+          <div class="imc-scale">
+            <span class="s1"></span>
+            <span class="s2"></span>
+            <span class="s3"></span>
+            <span class="s4"></span>
+            <span class="s5"></span>
+          </div>
+          <div class="imc-indicator" id="imcIndicator"></div>
+        </div>
+        <div class="imc-scale-labels">
+          <span>Baixo</span><span>Normal</span><span>Sobrepeso</span><span>Obesidade</span>
+        </div>
+        <a href="#planos" class="btn btn-green" style="margin-top:24px;width:100%;font-size:15px;padding:16px;">
+          Ver planos recomendados →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     PLANOS
+================================================ -->
+<section id="planos" class="section-pad">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Invista em você</span>
+      <h2>Planos para <span style="color:var(--orange)">cada objetivo</span></h2>
+      <p>Sem taxa de matrícula nos 3 primeiros dias. Cancele quando quiser. Sem fidelidade forçada.</p>
+    </div>
+    <div class="planos-grid">
+
+      <!-- Basic -->
+      <div class="plan-card reveal">
+        <div class="plan-name">Basic</div>
+        <div class="plan-price bebas"><sup>R$</sup>99</div>
+        <div class="plan-period">por mês • sem fidelidade</div>
+        <ul class="plan-features">
+          <li class="plan-feature active"><span class="check">✓</span> Acesso livre à musculação</li>
+          <li class="plan-feature active"><span class="check">✓</span> Vestiários completos</li>
+          <li class="plan-feature active"><span class="check">✓</span> App de treino gratuito</li>
+          <li class="plan-feature"><span class="cross">✕</span> Aulas coletivas</li>
+          <li class="plan-feature"><span class="cross">✕</span> Avaliação física</li>
+          <li class="plan-feature"><span class="cross">✕</span> Convidados fins de semana</li>
+        </ul>
+        <a href="#contato" class="btn btn-outline" style="width:100%;justify-content:center;">Escolher Basic</a>
+      </div>
+
+      <!-- Pro (Destacado) -->
+      <div class="plan-card featured reveal">
+        <div class="featured-label">Popular</div>
+        <div class="plan-name" style="color:var(--green)">Pro</div>
+        <div class="plan-price bebas" style="color:var(--green)"><sup>R$</sup>149</div>
+        <div class="plan-period">por mês • sem fidelidade</div>
+        <ul class="plan-features">
+          <li class="plan-feature active"><span class="check">✓</span> Tudo do Basic</li>
+          <li class="plan-feature active"><span class="check">✓</span> Todas as aulas coletivas</li>
+          <li class="plan-feature active"><span class="check">✓</span> Acompanhamento mensal</li>
+          <li class="plan-feature active"><span class="check">✓</span> Área de relaxamento</li>
+          <li class="plan-feature active"><span class="check">✓</span> Prioridade na grade</li>
+          <li class="plan-feature"><span class="cross">✕</span> Convidados fins de semana</li>
+        </ul>
+        <a href="#contato" class="btn btn-green" style="width:100%;justify-content:center;">Escolher Pro</a>
+      </div>
+
+      <!-- Elite -->
+      <div class="plan-card reveal">
+        <div class="plan-name">Elite</div>
+        <div class="plan-price bebas"><sup>R$</sup>199</div>
+        <div class="plan-period">por mês • sem fidelidade</div>
+        <ul class="plan-features">
+          <li class="plan-feature active"><span class="check">✓</span> Tudo do Pro</li>
+          <li class="plan-feature active"><span class="check">✓</span> Avaliação física mensal</li>
+          <li class="plan-feature active"><span class="check">✓</span> 2 convidados fins de semana</li>
+          <li class="plan-feature active"><span class="check">✓</span> Personal trainer incluso</li>
+          <li class="plan-feature active"><span class="check">✓</span> Nutricionista parceiro</li>
+          <li class="plan-feature active"><span class="check">✓</span> Acesso 24 horas</li>
+        </ul>
+        <a href="#contato" class="btn btn-orange" style="width:100%;justify-content:center;color:#fff;">Escolher Elite</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     CONTATO
+================================================ -->
+<section id="contato" class="section-pad">
+  <div class="container">
+    <div class="contato-grid">
+      <div class="contato-info reveal">
+        <span class="section-label">Fale conosco</span>
+        <h2>Garanta sua <span style="color:var(--green)">Vaga</span></h2>
+        <p>Preencha o formulário ou nos chame pelo WhatsApp. Nossa equipe responde em menos de 30 minutos durante o horário comercial.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-icon" aria-hidden="true">📍</div>
+            <div>
+              <h4>Endereço</h4>
+              <p>Av. Fitness, 1200 — Bairro Saúde<br>São Paulo, SP — CEP 04020-001</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon" aria-hidden="true">📞</div>
+            <div>
+              <h4>Telefone / WhatsApp</h4>
+              <p>(11) 99999-8888</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon" aria-hidden="true">📧</div>
+            <div>
+              <h4>E-mail</h4>
+              <p>contato@novaera.fit</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon" aria-hidden="true">🕐</div>
+            <div>
+              <h4>Horário de Funcionamento</h4>
+              <p>Seg–Sex: 05h–23h<br>Sáb: 06h–20h • Dom: 07h–14h</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card reveal">
+        <h3>Garanta sua Vaga 🔥</h3>
+        <p>Preencha o formulário e receba uma proposta personalizada em minutos.</p>
+        <form id="contactForm" novalidate>
+          <div class="form-fields">
+            <div class="form-input-wrap">
+              <label for="fNome">Nome completo</label>
+              <input type="text" id="fNome" placeholder="Seu nome" autocomplete="name" aria-required="true">
+              <span class="form-error" id="fNomeError" aria-live="polite"></span>
+            </div>
+            <div class="form-input-wrap">
+              <label for="fEmail">E-mail</label>
+              <input type="email" id="fEmail" placeholder="seu@email.com" autocomplete="email" inputmode="email" aria-required="true">
+              <span class="form-error" id="fEmailError" aria-live="polite"></span>
+            </div>
+            <div class="form-input-wrap">
+              <label for="fTel">Telefone / WhatsApp</label>
+              <input type="tel" id="fTel" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="tel" aria-required="true">
+              <span class="form-error" id="fTelError" aria-live="polite"></span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-green" style="width:100%;font-size:15px;padding:16px;">
+            Enviar mensagem →
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================
+     FOOTER
+================================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo">Nova<span>Era</span> Fitness</span>
+        <p>Transformando corpos e mentes desde 2016. Venha fazer parte da maior comunidade fitness da região.</p>
+        <div class="social-links" aria-label="Redes sociais">
+          <a href="#" class="social-link" aria-label="Instagram">📷</a>
+          <a href="#" class="social-link" aria-label="Facebook">📘</a>
+          <a href="#" class="social-link" aria-label="YouTube">▶️</a>
+          <a href="#" class="social-link" aria-label="TikTok">🎵</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Links Rápidos</h4>
+        <ul>
+          <li><a href="#sobre">Sobre Nós</a></li>
+          <li><a href="#modalidades">Modalidades</a></li>
+          <li><a href="#horarios">Horários</a></li>
+          <li><a href="#planos">Planos & Preços</a></li>
+          <li><a href="#imc">Calcular IMC</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li><a href="mailto:contato@novaera.fit">contato@novaera.fit</a></li>
+          <li><a href="tel:+5511999998888">(11) 99999-8888</a></li>
+          <li><a href="#contato">Falar pelo WhatsApp</a></li>
+          <li><a href="#contato">Agendar aula experimental</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 NovaEra Fitness. Todos os direitos reservados.</span>
+      <span>Desenvolvido com ❤️ &amp; 💪 — <a href="#">Política de Privacidade</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================================================
+     WHATSAPP BUTTON
+================================================ -->
+<a
+  href="https://wa.me/5511999998888?text=Ol%C3%A1%2C%20NovaEra%20Fitness%21%20Gostaria%20de%20agendar%20minha%20aula%20experimental."
+  class="whatsapp-btn"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Falar pelo WhatsApp"
+>
+  <div class="wa-tooltip">Agende sua aula grátis!</div>
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- Scroll to top -->
+<button class="scroll-top" id="scrollTop" aria-label="Voltar ao topo">↑</button>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+
+<!-- ================================================
+     JAVASCRIPT
+================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ─── ELEMENTS ─── */
+  const header      = document.getElementById('header');
+  const hamburger   = document.getElementById('hamburger');
+  const mobileMenu  = document.getElementById('mobileMenu');
+  const scrollTopBtn = document.getElementById('scrollTop');
+  const toast       = document.getElementById('toast');
+  const navLinks    = document.querySelectorAll('.nav-links a');
+  const allSections = document.querySelectorAll('section[id]');
+
+  /* ─── HEADER SCROLL STATE ─── */
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        header.classList.toggle('scrolled', y > 20);
+        scrollTopBtn.classList.toggle('show', y > 400);
+        updateActiveNav();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ─── HAMBURGER / MOBILE MENU ─── */
+  function closeMobileMenu() {
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+    mobileMenu.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileMenu));
+
+  /* ─── SMOOTH SCROLL ─── */
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      const target = document.querySelector(anchor.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      const offset = header.offsetHeight + 8;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  /* ─── ACTIVE NAV LINK ─── */
+  function updateActiveNav() {
+    let current = '';
+    allSections.forEach(section => {
+      const top = section.offsetTop - header.offsetHeight - 80;
+      if (window.scrollY >= top) current = section.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  /* ─── SCROLL TO TOP ─── */
+  scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  /* ─── REVEAL ON SCROLL ─── */
+  const revealObserver = new IntersectionObserver(
+    entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+    }),
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 80}ms`;
+    revealObserver.observe(el);
+  });
+
+  /* ─── TABS ─── */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      const panel = document.getElementById('tab-' + tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  /* ─── IMC CALCULATOR ─── */
+  window.calcularIMC = function() {
+    const pesoEl    = document.getElementById('imcPeso');
+    const alturaEl  = document.getElementById('imcAltura');
+    const pesoErr   = document.getElementById('pesoError');
+    const altErr    = document.getElementById('alturaError');
+    let valid = true;
+
+    pesoEl.classList.remove('error'); pesoErr.textContent = '';
+    alturaEl.classList.remove('error'); altErr.textContent = '';
+
+    const peso   = parseFloat(pesoEl.value);
+    const altura = parseFloat(alturaEl.value);
+
+    if (!pesoEl.value || isNaN(peso) || peso < 30 || peso > 250) {
+      pesoEl.classList.add('error');
+      pesoErr.textContent = 'Insira um peso válido (30–250 kg).';
+      valid = false;
+    }
+    if (!alturaEl.value || isNaN(altura) || altura < 100 || altura > 250) {
+      alturaEl.classList.add('error');
+      altErr.textContent = 'Insira uma altura válida (100–250 cm).';
+      valid = false;
+    }
+    if (!valid) return;
+
+    const altM  = altura / 100;
+    const imc   = peso / (altM * altM);
+    const imcFmt = imc.toFixed(1);
+
+    let categoria, msg, color;
+    if (imc < 18.5) {
+      categoria = 'Abaixo do Peso'; color = '#4fc3f7';
+      msg = `Seu IMC é ${imcFmt}. Foco em nutrição e ganho de massa muscular. Temos o plano certo pra você decolar! 💪`;
+    } else if (imc < 25) {
+      categoria = 'Peso Normal'; color = '#81c784';
+      msg = `Parabéns! Seu IMC é ${imcFmt}. Você está na faixa ideal. Vamos manter e evoluir o condicionamento! 🏆`;
+    } else if (imc < 30) {
+      categoria = 'Sobrepeso'; color = '#ffb74d';
+      msg = `Seu IMC é ${imcFmt}. Que tal dar uma virada? Nossa equipe tem o protocolo perfeito pra você! 🔥`;
+    } else if (imc < 35) {
+      categoria = 'Obesidade Grau I'; color = '#ff8a65';
+      msg = `Seu IMC é ${imcFmt}. O primeiro passo já foi dado! Venha conhecer nosso programa de transformação. 🌟`;
+    } else {
+      categoria = 'Obesidade Grau II+'; color = '#ef5350';
+      msg = `Seu IMC é ${imcFmt}. Nossa equipe médica e de educação física está pronta para te acompanhar com segurança! ❤️`;
+    }
+
+    const resultEl  = document.getElementById('imcResult');
+    const scoreEl   = document.getElementById('imcScoreDisplay');
+    const catEl     = document.getElementById('imcCategory');
+    const msgEl     = document.getElementById('imcMsg');
+    const indicator = document.getElementById('imcIndicator');
+
+    catEl.textContent = categoria;
+    catEl.style.color = color;
+    scoreEl.style.color = color;
+    msgEl.textContent  = msg;
+    resultEl.classList.add('show');
+
+    // Animate number
+    let start = 0, target = parseFloat(imcFmt);
+    const step = target / 40;
+    scoreEl.textContent = '0.0';
+    const timer = setInterval(() => {
+      start = Math.min(start + step, target);
+      scoreEl.textContent = start.toFixed(1);
+      if (start >= target) clearInterval(timer);
+    }, 25);
+
+    // Indicator position (scale: 14 to 40+)
+    const minIMC = 14, maxIMC = 40;
+    const pct = Math.min(Math.max((imc - minIMC) / (maxIMC - minIMC), 0), 1);
+    indicator.style.left = `calc(${pct * 100}%)`;
+
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+
+  /* ─── PHONE MASK ─── */
+  function phoneMask(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length >= 7) {
+      v = v.length === 11
+        ? v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
+        : v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    } else if (v.length >= 3) {
+      v = v.replace(/(\d{2})(\d+)/, '($1) $2');
+    } else if (v.length >= 1) {
+      v = v.replace(/(\d+)/, '($1');
+    }
+    e.target.value = v;
+  }
+
+  const fTel = document.getElementById('fTel');
+  if (fTel) fTel.addEventListener('input', phoneMask);
+
+  /* ─── FORM VALIDATION ─── */
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const nome   = document.getElementById('fNome');
+      const email  = document.getElementById('fEmail');
+      const tel    = document.getElementById('fTel');
+      const eNome  = document.getElementById('fNomeError');
+      const eEmail = document.getElementById('fEmailError');
+      const eTel   = document.getElementById('fTelError');
+
+      [nome, email, tel].forEach(f => f.classList.remove('error'));
+      [eNome, eEmail, eTel].forEach(f => f.textContent = '');
+
+      let ok = true;
+
+      if (!nome.value.trim() || nome.value.trim().length < 3) {
+        nome.classList.add('error');
+        eNome.textContent = 'Por favor, insira seu nome completo (mín. 3 caracteres).';
+        ok = false;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailRegex.test(email.value.trim())) {
+        email.classList.add('error');
+        eEmail.textContent = 'Digite um e-mail válido (ex: nome@email.com).';
+        ok = false;
+      }
+      const telDigits = tel.value.replace(/\D/g, '');
+      if (telDigits.length < 10) {
+        tel.classList.add('error');
+        eTel.textContent = 'Digite um telefone válido com DDD (mín. 10 dígitos).';
+        ok = false;
+      }
+
+      if (!ok) return;
+
+      showToast('✅ Mensagem enviada! Nossa equipe entrará em contato em breve.');
+      contactForm.reset();
+    });
+  }
+
+  /* ─── REAL-TIME FIELD VALIDATION ─── */
+  function liveValidate(inputId, errId, validator) {
+    const input = document.getElementById(inputId);
+    const err   = document.getElementById(errId);
+    if (!input || !err) return;
+    input.addEventListener('blur', () => {
+      const msg = validator(input.value);
+      input.classList.toggle('error', !!msg);
+      err.textContent = msg || '';
+    });
+    input.addEventListener('focus', () => {
+      input.classList.remove('error'); err.textContent = '';
+    });
+  }
+  liveValidate('fNome', 'fNomeError', v => v.trim().length < 3 && v.trim() ? 'Nome muito curto.' : '');
+  liveValidate('fEmail', 'fEmailError', v => {
+    if (!v) return '';
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? '' : 'E-mail inválido.';
+  });
+  liveValidate('fTel', 'fTelError', v => {
+    const d = v.replace(/\D/g, '');
+    return d && d.length < 10 ? 'Insira DDD + número completo.' : '';
+  });
+
+  /* ─── TOAST ─── */
+  let toastTimer;
+  function showToast(msg) {
+    toast.innerHTML = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4500);
+  }
+
+  /* ─── PARALLAX HERO ─── */
+  const heroBg = document.getElementById('heroBg');
+  if (heroBg && window.matchMedia('(min-width: 768px)').matches) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        heroBg.style.transform = `translateY(${y * 0.35}px)`;
+      }
+    }, { passive: true });
+  }
+
+})();
+</script>
+</body>
+</html>
